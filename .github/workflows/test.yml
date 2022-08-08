@@ -9,15 +9,21 @@ on:
     - main
 
 jobs:
-  prepare:
+  job1:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-          check-files: [git diff --name-only HEAD]
+    outputs:
+      matrix: ${{ matrix.check-files }}
+    steps:
+#    - id: set-matrix
+      - run: |
+        git diff --name-only HEAD
+        ls -lah
+  job2:
+    runs-on: ubuntu-latest
     steps:
       - run: |
-          od -c ${{ matrix.check-files }} | grep -o "\t" | wc -l > ${{ matrix.check-files }}.log
-          ls -lah
+        od -c ${{ matrix.check-files }} | grep -o "\t" | wc -l > ${{ matrix.check-files }}.log
+        ls -lah
       - name: Upload report
         uses: actions/upload-artifact@v2
         with:
