@@ -1,4 +1,4 @@
-name: Test for self-runner
+name: Test for slack notification action
 
 on: [push]
 
