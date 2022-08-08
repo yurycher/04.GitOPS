@@ -24,10 +24,8 @@ jobs:
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
-  report:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
+      - name: Found tabs
+        run: |
           od -c ${{ steps.changed-files.outputs.all_changed_files }} | grep -o "\t" | wc -l > ${{ steps.changed-files.outputs.all_changed_files }}.log
           ls -lah
       - name: Upload report
