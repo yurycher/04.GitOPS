@@ -1,4 +1,4 @@
-name: CI
+name: Find tabs in code and push reports
 
 on:
   push:
@@ -9,20 +9,28 @@ on:
       - main
 
 jobs:
-  build:
+  find:
     runs-on: ubuntu-latest  # windows-latest | macos-latest
     name: Test changed-files
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
-
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v24.1
-
       - name: List all changed files
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          od -c ${{ steps.changed-files.outputs.all_changed_files }} | grep -o "\t" | wc -l > ${{ steps.changed-files.outputs.all_changed_files }}.log
+          ls -lah
+      - name: Upload report
+        uses: actions/upload-artifact@v2
+        with:
+          path: ${{ steps.changed-files.outputs.all_changed_files }}.log

@@ -1,24 +1,29 @@
-name: Check remote hosts and push reports
+name: Test for self-runner
 
-on:
-  push:
-    branches:
-    - main
+on: [push]
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-          check-sites: [onliner.by, google.com, github.com]
+  build:
+    #runs-on: ubuntu-latest
+    runs-on: [my_runner]
     steps:
-      - name: Install netcat
-        run: sudo apt update && sudo apt install -y netcat
-      - run: echo "netcat has been installed"
-      - run: |
-          nc -z -v -w2 ${{ matrix.check-sites }} 443 > ${{ matrix.check-sites }}.log 2>&1
-          ls -la
-      - name: Upload report
-        uses: actions/upload-artifact@v2
-        with:
-          path: ${{ matrix.check-sites }}.log
+    - run: echo "The ${{ github.repository }} repository will be cloned to the runner."
+    - uses: actions/checkout@v1
+    - name: Run a one-line script
+      run: ls -lar
+    - name: Display hostname
+      run: hostname -a
+  slack:
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: integration
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        SLACK_TITLE: 'Looks like job is done :)'
+        SLACK_USERNAME: pluhin
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
