@@ -26,8 +26,8 @@ jobs:
           done
       - name: Found tabs
         run: |
-          od -c ${{ steps.changed-files.outputs.all_changed_files }} | grep -o "\t" | wc -l > ${{ steps.changed-files.outputs.all_changed_files }}.log
-          ls -lah
+          od -c ${{ steps.changed-files.outputs.all_changed_files }} | grep -o "\t" | wc -l >> ${{ steps.changed-files.outputs.all_changed_files }}.log
+#          ls -lah
       - name: Upload report
         uses: actions/upload-artifact@v2
         with:
