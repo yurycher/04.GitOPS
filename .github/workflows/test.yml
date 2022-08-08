@@ -15,9 +15,7 @@ jobs:
       matrix: ${{ matrix.check-files }}
     steps:
 #    - id: set-matrix
-      - run: |
-        git diff --name-only HEAD
-        ls -lah
+      - run: git diff --name-only HEAD
   job2:
     runs-on: ubuntu-latest
     steps:
