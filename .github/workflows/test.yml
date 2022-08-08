@@ -1,0 +1,24 @@
+name: Find tabs in code and push reports
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+          check-files: [git diff --name-only HEAD]
+    steps:
+      - run: |
+          od -c ${{ matrix.check-files }} | grep -o "\t" | wc -l > ${{ matrix.check-files }}.log
+          ls -lah
+      - name: Upload report
+        uses: actions/upload-artifact@v2
+        with:
+          path: ${{ matrix.check-files }}.log
