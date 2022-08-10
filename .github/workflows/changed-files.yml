@@ -23,7 +23,7 @@ jobs:
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
-            od -c $file | grep -o "\t" | wc -l >> $files.log
+            od -c $file | grep -o "\t" | wc -l >> files.log
           done
 #      - name: Found tabs
 #        run: |
