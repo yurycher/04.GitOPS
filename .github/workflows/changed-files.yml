@@ -32,4 +32,4 @@ jobs:
       - name: Upload report
         uses: actions/upload-artifact@v2
         with:
-          path: ${{ file }}.log
+          path: ./files.log
